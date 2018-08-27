@@ -12,6 +12,24 @@ from copy import deepcopy
 import json
 import networkx as nx
 
+def getAllCodes(zbp,ndigits=None):
+    ret=[]
+    with open(zbp,'r') as fin:
+        ln=0
+        for line in fin:
+            if (ln==0):
+                ln+=1
+                pos={k.strip():i for i,k in enumerate(line.split('\t'))}
+            else:
+                vals=[x.strip() for x in line.split('\t')]
+                N=vals[pos['naics']]
+                ret.append(N)
+    ret=list(set(ret))
+    if (ndigits):
+        ret=[x[:ndigits] for x in ret]
+        ret=list(set(ret))
+    return(sorted(ret))
+
 def readNaicsGraph(gName,pop,zbp,ncode):
     G = nx.read_gpickle(gName)
 
