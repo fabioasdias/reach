@@ -24,7 +24,10 @@ def plotDistances(G,D,pos,seed):
     nx.draw(G,pos=pos, node_color=colors, node_size=10)
 
 
-def doThings(G,centre,others):
+def calcForce(s,z,W):
+    return(W[s]/(1E-9+D[s][z]**2))
+
+def doThings(G,centre,others,W):
     D={}
     # DR={}
     # DR[centre]=0
@@ -52,21 +55,21 @@ if __name__=='__main__':
             if (B>0):
                 seeds.append(z)
                 W[z]=B
-                if (len(seeds)>9):
-                    break
+                # if (len(seeds)>9):
+                #     break
 
 
         print(naics,'seeds',len(seeds))
         fasterSeeds={k:True for k in seeds}
         D={}
         for i,s in enumerate(seeds):
-            D[s] = doThings(G,s,seeds) #,DR[s]
+            D[s] = doThings(G,s,seeds,W) #,DR[s]
 
         
         s2id={k:i for i,k in enumerate(seeds)}
         with open('out_{0}.tsv'.format(naics),'w') as fout:
             for z in sorted(G.nodes()):
-                cSW=[(s,W[s]/(1E-9+D[s][z]**2)) for s in seeds if z in D[s]]
+                cSW=[(s,calcForce(s,z,W)) for s in seeds if z in D[s]]
                 cW=[x[1] for x in cSW]
                 fout.write('\t'.join([z, cSW[np.argmax(cW/norm(cW))][0]])+'\n')
 
