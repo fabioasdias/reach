@@ -36,7 +36,7 @@ def doThings(G,centre,others,W):
     while todo:
         z=todo.pop(0)
         for zz in G.neighbors(z):
-            if (zz not in D) and (zz not in fasterSeeds):
+            if (zz not in D):# and (zz not in fasterSeeds):
                 D[zz]=D[z]+1
                 # DR[zz]=DR[z]+vincenty((G.node[zz]['y'],G.node[zz]['x']),(G.node[z]['y'],G.node[z]['x'])).km
                 todo.append(zz)
@@ -44,7 +44,7 @@ def doThings(G,centre,others,W):
 
 if __name__=='__main__':
 
-    allNaics=getAllCodes(zbp,3)
+    allNaics=getAllCodes(zbp,4)
 
     for naics in allNaics:
         G=readNaicsGraph(graphName,pop,zbp,naics)
