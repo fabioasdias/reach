@@ -18,6 +18,8 @@ z2c={}
 with open(tsv,'r') as ftsv:
     for line in ftsv:
         z,c = line.strip().split('\t')
+        if (z[0]!='1') and (z[0]!='0') and (z[0]!='2'):
+            continue
         # if (z[:2]=='22') or (c[:2]=='22')or (z[:2]=='20') or (c[:2]=='20'):
         z2c[z]=c
 
@@ -37,7 +39,7 @@ with fiona.open(shp, 'r') as source:
         geoms[c].append(shape(feat['geometry']).buffer(wiggle))
 
 for c in geoms:
-    print('merging ',c)
+    # print('merging ',c)
     geoms[c]=(unary_union(geoms[c])).buffer(-1.0625*wiggle)
     if (not geoms[c].is_valid):
         geoms[c]=geoms[c].buffer(0)
