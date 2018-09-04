@@ -18,8 +18,8 @@ z2c={}
 with open(tsv,'r') as ftsv:
     for line in ftsv:
         z,c = line.strip().split('\t')
-        if (z[:2]=='22') or (c[:2]=='22')or (z[:2]=='20') or (c[:2]=='20'):
-            z2c[z]=c
+        # if (z[:2]=='22') or (c[:2]=='22')or (z[:2]=='20') or (c[:2]=='20'):
+        z2c[z]=c
 
 
 geoms={}

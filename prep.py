@@ -28,8 +28,8 @@ def plotDistances(G,D,pos,seed):
     nx.draw(G,pos=pos, node_color=colors, node_size=10)
 
 
-def calcForce(d,B):
-    return(B/(1E-9+d**2))
+def calcForce(d:float,B:float):
+    return(B/(d**2))
 
 if __name__=='__main__':
 
@@ -45,9 +45,10 @@ if __name__=='__main__':
 
 
     for naics in allNaics:
-        if (exists('./res/{0}.png'.format(naics))):
-            continue
+        # if (exists('./res/{0}.png'.format(naics))):
+        #     continue
         G=readNaicsGraph(graphName,pop,zbp,naics)
+        # G=nx.subgraph(G,[x for x in G.nodes() if (x[0]=='1') or (x[0]=='0') or (x[0]=='2')])
         pos={}
         seeds=[]
         W={}
@@ -62,7 +63,7 @@ if __name__=='__main__':
 
         print(naics,'seeds',len(seeds))
         for z in seeds:
-            G.node[z]['D']=1E-9
+            G.node[z]['D']=1
             G.node[z]['s']=z
             G.node[z]['f']=calcForce(G.node[z]['D'],W[G.node[z]['s']])
 
@@ -80,18 +81,28 @@ if __name__=='__main__':
                         G.node[n]['f']=maybeForce
                         todo.append(n)
 
-        colours=[]
         allNodes=sorted(G.nodes())
+
+        sources=set([G.node[x]['s'] for x in G.nodes()])
 
         with open('./res/list_{0}.tsv'.format(naics),'w') as fout:
             for z in allNodes:
-                colours.append(G.node[z]['s'])
                 fout.write('\t'.join([z, G.node[z]['s']])+'\n')
 
-        plt.figure()                
-        plt.title(nnames[naics])
-        nx.draw(G,pos=pos,node_color=colours,nodelist=allNodes,node_size=4,cmap=cmap)
-        plt.savefig('./res/{0}.png'.format(naics),dpi=300)
-        plt.close()
+
+        # C={k:cmap(float(i)/len(sources)) for i,k in enumerate(sources)}
+
+        # plt.figure()                
+        # plt.title(nnames[naics])
+        # for s in sources:
+        #     ob=[x for x in G.nodes() if G.node[x]['s']==s]
+        #     nx.draw(nx.subgraph(G,ob),pos=pos, node_size=10, node_color=[C[s],])
+        #     nx.draw_networkx_nodes(nx.subgraph(G,[s,]),pos=pos,node_color='white', node_size=W[s]+4, node_shape='^')
+        #     nx.draw_networkx_nodes(nx.subgraph(G,[s,]),pos=pos,node_color='r', node_size=W[s], node_shape='^')
+
+
+        
+        # plt.savefig('./res/{0}.png'.format(naics),dpi=900)
+        # plt.close()
 
             
